@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MECANIZANDO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+    }
+
+    header {
+      background-color: #0d1b2a;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    .filters {
+      padding: 20px;
+      text-align: center;
+    }
+
+    select {
+      padding: 10px;
+      margin: 0 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 10px;
+      width: 200px;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .product img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: contain;
+    }
+
+    .product h3 {
+      font-size: 1em;
+      margin: 10px 0;
+    }
+
+    .product a {
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    function filterProducts() {
+      const marca = document.getElementById('marca').value;
+      const modelo = document.getElementById('modelo').value;
+      const categoria = document.getElementById('categoria').value;
+
+      const products = document.querySelectorAll('.product');
+      products.forEach(product => {
+        if (
+          (marca === '' || product.dataset.marca === marca) &&
+          (modelo === '' || product.dataset.modelo === modelo) &&
+          (categoria === '' || product.dataset.categoria === categoria)
+        ) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <img class="logo" src="logo.png" alt="Logo" />
+    <h1>MECANIZANDO</h1>
+  </header>
+
+  <div class="filters">
+    <select id="marca" onchange="filterProducts()">
+      <option value="">Todas as Marcas</option>
+      <option value="chevrolet">Chevrolet</option>
+    </select>
+
+    <select id="modelo" onchange="filterProducts()">
+      <option value="">Todos os Modelos</option>
+      <option value="onix">Onix</option>
+    </select>
+
+    <select id="categoria" onchange="filterProducts()">
+      <option value="">Todas as Categorias</option>
+      <option value="amortecedor">Amortecedor</option>
+      <option value="motor">Motor</option>
+      <option value="mangueira">Mangueiras</option>
+    </select>
+  </div>
+
+  <div class="products">
+    <div class="product" data-marca="chevrolet" data-modelo="onix" data-categoria="amortecedor">
+      <img src="https://http2.mlstatic.com/D_NQ_NP_2X_924156-MLB17731694283_092023-F.webp" alt="Amortecedor Onix">
+      <h3>Amortecedor Dianteiro Onix</h3>
+      <a href="https://produto.mercadolivre.com.br/MLB-1234567890" target="_blank">Ver no Mercado Livre</a>
+    </div>
+    <div class="product" data-marca="chevrolet" data-modelo="onix" data-categoria="motor">
+      <img src="https://http2.mlstatic.com/D_NQ_NP_2X_718751-MLB6965672980_052023-F.webp" alt="Motor Onix">
+      <h3>Bobina de Ignição Onix</h3>
+      <a href="https://produto.mercadolivre.com.br/MLB-0987654321" target="_blank">Ver no Mercado Livre</a>
+    </div>
+  </div>
+</body>
+</html>
