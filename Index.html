@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>MECANIZANDO - Filtros Simulados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    h1 {
+      margin: 0;
+    }
+    .filters {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    select {
+      padding: 10px;
+      font-size: 1em;
+    }
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    .product {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 10px;
+      width: 250px;
+      text-align: center;
+      padding: 15px;
+    }
+    .product img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: contain;
+    }
+    .product h3 {
+      font-size: 1em;
+      margin: 10px 0;
+    }
+    .product a {
+      background: #f59e0b;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    function filterProducts() {
+      const marca = document.getElementById('marca').value;
+      const modelo = document.getElementById('modelo').value;
+      const categoria = document.getElementById('categoria').value;
+
+      const products = document.querySelectorAll('.product');
+      products.forEach(product => {
+        if (
+          (marca === '' || product.dataset.marca === marca) &&
+          (modelo === '' || product.dataset.modelo === modelo) &&
+          (categoria === '' || product.dataset.categoria === categoria)
+        ) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <h1>MECANIZANDO</h1>
+  </header>
+
+  <div class="filters">
+    <select id="marca" onchange="filterProducts()">
+      <option value="">Todas as Marcas</option>
+      <option value="chevrolet">Chevrolet</option>
+    </select>
+
+    <select id="modelo" onchange="filterProducts()">
+      <option value="">Todos os Modelos</option>
+      <option value="onix">Onix</option>
+    </select>
+
+    <select id="categoria" onchange="filterProducts()">
+      <option value="">Todas as Categorias</option>
+      <option value="amortecedor">Amortecedor</option>
+      <option value="motor">Motor</option>
+      <option value="mangueira">Mangueiras</option>
+    </select>
+  </div>
+
+  <div class="products">
+    <div class="product" data-marca="chevrolet" data-modelo="onix" data-categoria="amortecedor">
+      <img src="https://http2.mlstatic.com/D_NQ_NP_2X_942156-MLB71731694283_092023-F.webp" alt="Amortecedor Onix">
+      <h3>Amortecedor Dianteiro Onix</h3>
+      <a href="https://produto.mercadolivre.com.br/MLB-1234567890" target="_blank">Ver no Mercado Livre</a>
+    </div>
+    <div class="product" data-marca="chevrolet" data-modelo="onix" data-categoria="motor">
+      <img src="https://http2.mlstatic.com/D_NQ_NP_2X_718751-MLB69596572980_052023-F.webp" alt="Motor Onix">
+      <h3>Bobina de Ignição Onix</h3>
+      <a href="https://produto.mercadolivre.com.br/MLB-0987654321" target="_blank">Ver no Mercado Livre</a>
+    </div>
+    <div class="product" data-marca="chevrolet" data-modelo="onix" data-categoria="mangueira">
+      <img src="https://http2.mlstatic.com/D_NQ_NP_2X_999059-MLB72469096718_102023-F.webp" alt="Mangueira Onix">
+      <h3>Mangueira Radiador Onix</h3>
+      <a href="https://produto.mercadolivre.com.br/MLB-1122334455" target="_blank">Ver no Mercado Livre</a>
+    </div>
+  </div>
+</body>
+</html>
