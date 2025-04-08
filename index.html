@@ -9,11 +9,11 @@
 <body>
   <header>
     <h1>MECANIZANDO</h1>
-    <p>Encontre a peça certa para seu carro</p>
+    <button class="login-button">Login / Cadastro</button>
   </header>
 
   <section class="search-section">
-    <input type="text" id="searchInput" placeholder="Buscar peças..." />
+    <input type="text" id="searchInput" placeholder="Buscar por peça, marca ou veículo..." />
   </section>
 
   <section class="filters">
@@ -77,6 +77,14 @@
 
   <section class="results" id="results">
     <!-- Resultados das peças serão exibidos aqui -->
+  </section>
+
+  <section class="admin-section" id="adminSection">
+    <h2>Área do Administrador</h2>
+    <p>Cole seu link de afiliado abaixo:</p>
+    <input type="text" id="affiliateLink" placeholder="Cole aqui o link do produto" style="width: 100%; padding: 0.5rem; margin-top: 0.5rem;" />
+    <button onclick="buscarAfiliado()" style="margin-top: 1rem; padding: 0.5rem 1rem;">Buscar Informações</button>
+    <div id="afiliadoResultado" style="margin-top: 1rem;"></div>
   </section>
 
   <script src="script.js"></script>
