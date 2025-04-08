@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MECANIZANDO - Peças Automotivas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>MECANIZANDO</h1>
+    <p>Encontre a peça certa para seu carro</p>
+  </header>
+
+  <section class="search-section">
+    <input type="text" id="searchInput" placeholder="Buscar peças..." />
+  </section>
+
+  <section class="filters">
+    <select id="brandFilter">
+      <option value="">Todas as Marcas</option>
+      <option value="chevrolet">Chevrolet</option>
+      <option value="fiat">Fiat</option>
+      <option value="ford">Ford</option>
+      <option value="volkswagen">Volkswagen</option>
+      <option value="toyota">Toyota</option>
+      <option value="renault">Renault</option>
+      <option value="honda">Honda</option>
+      <option value="hyundai">Hyundai</option>
+    </select>
+
+    <select id="modelFilter">
+      <option value="">Todos os Modelos</option>
+      <option value="onix">Onix</option>
+      <option value="celta">Celta</option>
+      <option value="prisma">Prisma</option>
+      <option value="s10">S10</option>
+      <option value="uno">Uno</option>
+      <option value="palio">Palio</option>
+      <option value="strada">Strada</option>
+      <option value="argo">Argo</option>
+      <option value="ka">Ka</option>
+      <option value="fiesta">Fiesta</option>
+      <option value="ecosport">Ecosport</option>
+      <option value="gol">Gol</option>
+      <option value="fox">Fox</option>
+      <option value="saveiro">Saveiro</option>
+      <option value="voyage">Voyage</option>
+      <option value="corolla">Corolla</option>
+      <option value="hilux">Hilux</option>
+      <option value="etios">Etios</option>
+      <option value="sandero">Sandero</option>
+      <option value="logan">Logan</option>
+      <option value="duster">Duster</option>
+      <option value="civic">Civic</option>
+      <option value="fit">Fit</option>
+      <option value="hrv">HR-V</option>
+      <option value="hb20">HB20</option>
+      <option value="creta">Creta</option>
+    </select>
+
+    <select id="categoryFilter">
+      <option value="">Todas as Categorias</option>
+      <option value="motor">Motor</option>
+      <option value="suspensao">Suspensão</option>
+      <option value="freios">Freios</option>
+      <option value="eletrica">Elétrica</option>
+      <option value="interior">Interior</option>
+      <option value="transmissao">Transmissão</option>
+    </select>
+  </section>
+
+  <section class="ads">
+    <!-- Espaço reservado para anúncios (Google AdSense futuramente) -->
+    <div class="ad-box">Espaço para anúncio</div>
+  </section>
+
+  <section class="results" id="results">
+    <!-- Resultados das peças serão exibidos aqui -->
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
