@@ -57,6 +57,29 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
+
+    .admin-section {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-section h2 {
+      margin-top: 0;
+    }
+
+    .admin-section input,
+    .admin-section button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
   </style>
 </head>
 
@@ -91,6 +114,14 @@
 
   <section class="resultados" id="resultados">
     <!-- Aqui aparecerão as peças filtradas -->
+  </section>
+
+  <section class="admin-section" id="adminSection">
+    <h2>Área do Administrador</h2>
+    <p>Cole seu link de afiliado abaixo:</p>
+    <input type="text" id="affiliateLink" placeholder="Cole aqui o link do produto">
+    <button onclick="buscarAfiliado()">Buscar Informações</button>
+    <div id="afiliadoResultado"></div>
   </section>
 
   <script src="script.js"></script>
