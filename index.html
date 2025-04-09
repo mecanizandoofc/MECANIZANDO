@@ -60,6 +60,10 @@
       border-radius: 8px;
       width: 250px;
     }
+    .sidebar label, .sidebar select {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
     .content {
       flex: 1;
       display: grid;
@@ -122,24 +126,62 @@
     <div class="logo">
       <img src="logo.png" alt="Logo Mecanizando">
     </div>
-    <div class="search-bar" id="searchContainer">
+    <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Buscar por peça, marca ou modelo">
-      <i class="fas fa-search"></i>
+      <i class="fas fa-search" onclick="filtrarProdutos()"></i>
     </div>
     <div class="theme-toggle" onclick="alternarTema()">
       <i class="fas fa-adjust"></i>
     </div>
   </header>
 
-  <!-- conteúdo principal e filtros já estão prontos no seu código atual -->
-  <!-- painel de admin também já está 100% -->
+  <div class="main">
+    <div class="sidebar">
+      <label for="marca">Marca:</label>
+      <select id="marca" onchange="filtrarProdutos()">
+        <option value="">Todas</option>
+        <option>Volkswagen</option>
+        <option>Chevrolet</option>
+        <option>Fiat</option>
+        <option>Jeep</option>
+        <option>Toyota</option>
+        <option>Nissan</option>
+        <option>Mitsubishi</option>
+      </select>
+
+      <label for="modelo">Modelo:</label>
+      <select id="modelo" onchange="filtrarProdutos()">
+        <option value="">Todos</option>
+      </select>
+
+      <label for="categoria">Categoria:</label>
+      <select id="categoria" onchange="filtrarProdutos()">
+        <option value="">Todas</option>
+        <option>Suspensão</option>
+        <option>Freio</option>
+        <option>Motor</option>
+        <option>Elétrica</option>
+      </select>
+    </div>
+    <div class="content" id="produtos"></div>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <h2>Adicionar Produto</h2>
+    <input type="text" id="nome" placeholder="Nome do produto">
+    <input type="text" id="imagem" placeholder="URL da imagem">
+    <input type="text" id="link" placeholder="Link do produto (Mercado Livre)">
+    <input type="text" id="marcaProd" placeholder="Marca">
+    <input type="text" id="modeloProd" placeholder="Modelo">
+    <input type="text" id="categoriaProd" placeholder="Categoria">
+    <button onclick="adicionarProduto()">Adicionar</button>
+  </div>
 
   <footer>
     &copy; 2025 MECANIZANDO - Todos os direitos reservados
   </footer>
 
   <script>
-    // Tema
     function alternarTema() {
       const body = document.body;
       const temaAtual = body.classList.contains('light') ? 'light' : 'dark';
@@ -149,10 +191,72 @@
       localStorage.setItem('tema', novoTema);
     }
 
+    function filtrarProdutos() {
+      const termo = document.getElementById('searchInput').value.toLowerCase();
+      const marca = document.getElementById('marca').value;
+      const modelo = document.getElementById('modelo').value;
+      const categoria = document.getElementById('categoria').value;
+      const container = document.getElementById('produtos');
+      container.innerHTML = '';
+
+      const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+      const filtrados = produtos.filter(p =>
+        (!marca || p.marca === marca) &&
+        (!modelo || p.modelo === modelo) &&
+        (!categoria || p.categoria === categoria) &&
+        (!termo || p.nome.toLowerCase().includes(termo))
+      );
+
+      for (const p of filtrados) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${p.imagem}" alt="${p.nome}">
+          <h3>${p.nome}</h3>
+          <p>${p.marca} - ${p.modelo}</p>
+          <p>Categoria: ${p.categoria}</p>
+          <a href="${p.link}" target="_blank">Ver no Mercado Livre</a>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    function adicionarProduto() {
+      const nome = document.getElementById('nome').value;
+      const imagem = document.getElementById('imagem').value;
+      const link = document.getElementById('link').value;
+      const marca = document.getElementById('marcaProd').value;
+      const modelo = document.getElementById('modeloProd').value;
+      const categoria = document.getElementById('categoriaProd').value;
+      if (!nome || !link || !marca || !modelo || !categoria || !imagem) return alert('Preencha todos os campos.');
+
+      const produto = { nome, imagem, link, marca, modelo, categoria };
+      const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+      produtos.push(produto);
+      localStorage.setItem('produtos', JSON.stringify(produtos));
+
+      document.getElementById('nome').value = '';
+      document.getElementById('imagem').value = '';
+      document.getElementById('link').value = '';
+      document.getElementById('marcaProd').value = '';
+      document.getElementById('modeloProd').value = '';
+      document.getElementById('categoriaProd').value = '';
+
+      filtrarProdutos();
+      alert('Produto adicionado!');
+    }
+
     window.onload = function () {
       const temaSalvo = localStorage.getItem('tema') || 'dark';
       document.body.classList.remove('light', 'dark');
       document.body.classList.add(temaSalvo);
+
+      const senha = prompt('Área restrita - Digite a senha de administrador:');
+      if (senha === 'mecanizando123') {
+        document.getElementById('adminPanel').classList.add('active');
+      }
+
+      filtrarProdutos();
     }
   </script>
 </body>
