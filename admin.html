@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - MECANIZANDO</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    .admin-form {
+      max-width: 600px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,200,0.1);
+    }
+    .admin-form h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .admin-form input {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.7rem;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: white;
+    }
+    .admin-form button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #00ffcc;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-form">
+    <h2>Adicionar Produto</h2>
+    <input type="text" id="nome" placeholder="Nome do produto">
+    <input type="text" id="imagem" placeholder="URL da imagem">
+    <input type="text" id="link" placeholder="Link do produto (Mercado Livre)">
+    <input type="text" id="marcaProd" placeholder="Marca">
+    <input type="text" id="modeloProd" placeholder="Modelo">
+    <input type="text" id="categoriaProd" placeholder="Categoria">
+    <button onclick="adicionarProduto()">Adicionar Produto</button>
+  </div>
+
+  <script>
+    const senha = prompt('Digite a senha de administrador:');
+    if (senha !== 'mecanizando123') {
+      document.body.innerHTML = '<h2 style="text-align:center; color:red;">Acesso negado</h2>';
+    }
+
+    function adicionarProduto() {
+      const nome = document.getElementById('nome').value;
+      const imagem = document.getElementById('imagem').value;
+      const link = document.getElementById('link').value;
+      const marca = document.getElementById('marcaProd').value;
+      const modelo = document.getElementById('modeloProd').value;
+      const categoria = document.getElementById('categoriaProd').value;
+
+      if (!nome || !link || !marca || !modelo || !categoria || !imagem) return alert('Preencha todos os campos.');
+
+      const produto = { nome, imagem, link, marca, modelo, categoria };
+      const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+      produtos.push(produto);
+      localStorage.setItem('produtos', JSON.stringify(produtos));
+
+      alert('Produto adicionado com sucesso!');
+
+      document.getElementById('nome').value = '';
+      document.getElementById('imagem').value = '';
+      document.getElementById('link').value = '';
+      document.getElementById('marcaProd').value = '';
+      document.getElementById('modeloProd').value = '';
+      document.getElementById('categoriaProd').value = '';
+    }
+  </script>
+</body>
+</html>
