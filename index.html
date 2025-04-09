@@ -125,21 +125,6 @@
       font-weight: bold;
     }
 
-    .card button {
-      background-color: #444;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .destaques {
-      grid-column: 1 / -1;
-      margin-bottom: 2rem;
-    }
-
     .admin-panel {
       padding: 2rem;
       background: #1e1e1e;
@@ -204,16 +189,7 @@
       <label><input type="checkbox" class="filter" value="Arrefecimento"> <i class="fas fa-fan"></i>Arrefecimento</label>
 
       <strong style="margin-top: 1rem; display: block;">Marca</strong>
-      <select id="marcaSelect">
-        <option value="">Todas as marcas</option>
-        <option value="Volkswagen">Volkswagen</option>
-        <option value="Chevrolet">Chevrolet</option>
-        <option value="Fiat">Fiat</option>
-        <option value="Jeep">Jeep</option>
-        <option value="Toyota">Toyota</option>
-        <option value="Nissan">Nissan</option>
-        <option value="Mitsubishi">Mitsubishi</option>
-      </select>
+      <select id="marcaSelect"></select>
 
       <strong style="margin-top: 1rem; display: block;">Modelo</strong>
       <select id="modeloSelect">
@@ -221,7 +197,7 @@
       </select>
     </div>
 
-    <div class="content">
+    <div class="content" id="produtoContainer">
       <!-- Cards de produtos -->
     </div>
   </div>
@@ -233,6 +209,7 @@
     <input type="text" id="modelo" placeholder="Modelo do Veículo">
     <input type="text" id="categoria" placeholder="Categoria">
     <textarea id="descricao" placeholder="Descrição do Produto"></textarea>
+    <input type="url" id="imagem" placeholder="URL da Imagem do Produto">
     <input type="url" id="link" placeholder="Link para o Mercado Livre">
     <button id="adicionarProduto">Adicionar Produto</button>
   </div>
@@ -253,8 +230,16 @@
         'Mitsubishi': ['L200', 'Pajero', 'Outlander', 'ASX']
       };
 
-      function atualizarModelos() {
-        const marcaSelecionada = document.getElementById('marcaSelect').value;
+      const marcaSelect = document.getElementById('marcaSelect');
+      Object.keys(modelosPorMarca).forEach(marca => {
+        const option = document.createElement('option');
+        option.value = marca;
+        option.textContent = marca;
+        marcaSelect.appendChild(option);
+      });
+
+      marcaSelect.addEventListener("change", () => {
+        const marcaSelecionada = marcaSelect.value;
         const modeloSelect = document.getElementById('modeloSelect');
         modeloSelect.innerHTML = '<option value="">Todos os modelos</option>';
 
@@ -266,20 +251,7 @@
             modeloSelect.appendChild(option);
           });
         }
-      }
-
-      function aplicarFiltros() {
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        const marca = document.getElementById('marcaSelect').value;
-        const modelo = document.getElementById('modeloSelect').value;
-
-        console.log("Busca:", search);
-        console.log("Marca:", marca);
-        console.log("Modelo:", modelo);
-      }
-
-      document.getElementById("marcaSelect").addEventListener("change", atualizarModelos);
-      window.aplicarFiltros = aplicarFiltros;
+      });
 
       document.getElementById("adicionarProduto").addEventListener("click", () => {
         const nome = document.getElementById("nomePeca").value.trim();
@@ -287,9 +259,10 @@
         const modelo = document.getElementById("modelo").value.trim();
         const categoria = document.getElementById("categoria").value.trim();
         const descricao = document.getElementById("descricao").value.trim();
+        const imagem = document.getElementById("imagem").value.trim();
         const link = document.getElementById("link").value.trim();
 
-        if (!nome || !marca || !modelo || !categoria || !descricao || !link) {
+        if (!nome || !marca || !modelo || !categoria || !descricao || !imagem || !link) {
           alert("Preencha todos os campos.");
           return;
         }
@@ -297,6 +270,7 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
+          <img src="${imagem}" alt="Imagem da Peça" style="width: 100%; border-radius: 6px; margin-bottom: 1rem;">
           <h4>${nome}</h4>
           <p><strong>Marca:</strong> ${marca}</p>
           <p><strong>Modelo:</strong> ${modelo}</p>
@@ -313,6 +287,7 @@
         document.getElementById("modelo").value = "";
         document.getElementById("categoria").value = "";
         document.getElementById("descricao").value = "";
+        document.getElementById("imagem").value = "";
         document.getElementById("link").value = "";
       });
     });
