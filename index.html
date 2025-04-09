@@ -86,33 +86,6 @@
       color: #00ffcc;
       text-decoration: none;
     }
-    .admin-panel {
-      display: none;
-      background: #1a1a1a;
-      padding: 1rem;
-      margin: 1rem auto;
-      border-radius: 8px;
-      max-width: 600px;
-    }
-    .admin-panel.active { display: block; }
-    .admin-panel input, .admin-panel textarea {
-      width: 100%;
-      margin-bottom: 0.5rem;
-      padding: 0.5rem;
-      background: #222;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 4px;
-    }
-    .admin-panel button {
-      padding: 0.5rem 1rem;
-      background: #00ffcc;
-      border: none;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 4px;
-    }
     footer {
       text-align: center;
       padding: 1rem;
@@ -138,7 +111,7 @@
   <div class="main">
     <div class="sidebar">
       <label for="marca">Marca:</label>
-      <select id="marca" onchange="filtrarProdutos()">
+      <select id="marca" onchange="atualizarModelos(); filtrarProdutos()">
         <option value="">Todas</option>
         <option>Volkswagen</option>
         <option>Chevrolet</option>
@@ -166,22 +139,21 @@
     <div class="content" id="produtos"></div>
   </div>
 
-  <div class="admin-panel" id="adminPanel">
-    <h2>Adicionar Produto</h2>
-    <input type="text" id="nome" placeholder="Nome do produto">
-    <input type="text" id="imagem" placeholder="URL da imagem">
-    <input type="text" id="link" placeholder="Link do produto (Mercado Livre)">
-    <input type="text" id="marcaProd" placeholder="Marca">
-    <input type="text" id="modeloProd" placeholder="Modelo">
-    <input type="text" id="categoriaProd" placeholder="Categoria">
-    <button onclick="adicionarProduto()">Adicionar</button>
-  </div>
-
   <footer>
     &copy; 2025 MECANIZANDO - Todos os direitos reservados
   </footer>
 
   <script>
+    const modelosPorMarca = {
+      Volkswagen: ['Gol', 'Voyage', 'Saveiro', 'Fox', 'Polo'],
+      Chevrolet: ['Onix', 'Prisma', 'Celta', 'Corsa', 'S10'],
+      Fiat: ['Uno', 'Palio', 'Strada', 'Toro', 'Mobi'],
+      Jeep: ['Renegade', 'Compass', 'Commander'],
+      Toyota: ['Corolla', 'Hilux', 'Etios', 'Yaris'],
+      Nissan: ['Versa', 'March', 'Frontier', 'Kicks'],
+      Mitsubishi: ['L200', 'ASX', 'Pajero', 'Outlander']
+    };
+
     function alternarTema() {
       const body = document.body;
       const temaAtual = body.classList.contains('light') ? 'light' : 'dark';
@@ -189,6 +161,21 @@
       body.classList.remove(temaAtual);
       body.classList.add(novoTema);
       localStorage.setItem('tema', novoTema);
+    }
+
+    function atualizarModelos() {
+      const marcaSelecionada = document.getElementById('marca').value;
+      const selectModelo = document.getElementById('modelo');
+      selectModelo.innerHTML = '<option value="">Todos</option>';
+
+      if (modelosPorMarca[marcaSelecionada]) {
+        modelosPorMarca[marcaSelecionada].forEach(modelo => {
+          const opt = document.createElement('option');
+          opt.value = modelo;
+          opt.textContent = modelo;
+          selectModelo.appendChild(opt);
+        });
+      }
     }
 
     function filtrarProdutos() {
@@ -204,7 +191,7 @@
         (!marca || p.marca === marca) &&
         (!modelo || p.modelo === modelo) &&
         (!categoria || p.categoria === categoria) &&
-        (!termo || p.nome.toLowerCase().includes(termo))
+        (!termo || p.nome.toLowerCase().includes(termo) || p.marca.toLowerCase().includes(termo) || p.modelo.toLowerCase().includes(termo))
       );
 
       for (const p of filtrados) {
@@ -221,41 +208,11 @@
       }
     }
 
-    function adicionarProduto() {
-      const nome = document.getElementById('nome').value;
-      const imagem = document.getElementById('imagem').value;
-      const link = document.getElementById('link').value;
-      const marca = document.getElementById('marcaProd').value;
-      const modelo = document.getElementById('modeloProd').value;
-      const categoria = document.getElementById('categoriaProd').value;
-      if (!nome || !link || !marca || !modelo || !categoria || !imagem) return alert('Preencha todos os campos.');
-
-      const produto = { nome, imagem, link, marca, modelo, categoria };
-      const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-      produtos.push(produto);
-      localStorage.setItem('produtos', JSON.stringify(produtos));
-
-      document.getElementById('nome').value = '';
-      document.getElementById('imagem').value = '';
-      document.getElementById('link').value = '';
-      document.getElementById('marcaProd').value = '';
-      document.getElementById('modeloProd').value = '';
-      document.getElementById('categoriaProd').value = '';
-
-      filtrarProdutos();
-      alert('Produto adicionado!');
-    }
-
     window.onload = function () {
       const temaSalvo = localStorage.getItem('tema') || 'dark';
       document.body.classList.remove('light', 'dark');
       document.body.classList.add(temaSalvo);
-
-      const senha = prompt('Área restrita - Digite a senha de administrador:');
-      if (senha === 'mecanizando123') {
-        document.getElementById('adminPanel').classList.add('active');
-      }
-
+      atualizarModelos();
       filtrarProdutos();
     }
   </script>
