@@ -189,7 +189,9 @@
       <label><input type="checkbox" class="filter" value="Arrefecimento"> <i class="fas fa-fan"></i>Arrefecimento</label>
 
       <strong style="margin-top: 1rem; display: block;">Marca</strong>
-      <select id="marcaSelect"></select>
+      <select id="marcaSelect">
+        <option value="">Todas as marcas</option>
+      </select>
 
       <strong style="margin-top: 1rem; display: block;">Modelo</strong>
       <select id="modeloSelect">
@@ -212,6 +214,7 @@
     <input type="url" id="imagem" placeholder="URL da Imagem do Produto">
     <input type="url" id="link" placeholder="Link para o Mercado Livre">
     <button id="adicionarProduto">Adicionar Produto</button>
+    <button id="limparProdutos" style="margin-left: 1rem; background-color: #ff5555;">Limpar Produtos</button>
   </div>
 
   <footer>
@@ -231,6 +234,9 @@
       };
 
       const marcaSelect = document.getElementById('marcaSelect');
+      const modeloSelect = document.getElementById('modeloSelect');
+      const produtoContainer = document.getElementById('produtoContainer');
+
       Object.keys(modelosPorMarca).forEach(marca => {
         const option = document.createElement('option');
         option.value = marca;
@@ -240,9 +246,7 @@
 
       marcaSelect.addEventListener("change", () => {
         const marcaSelecionada = marcaSelect.value;
-        const modeloSelect = document.getElementById('modeloSelect');
         modeloSelect.innerHTML = '<option value="">Todos os modelos</option>';
-
         if (modelosPorMarca[marcaSelecionada]) {
           modelosPorMarca[marcaSelecionada].forEach(modelo => {
             const option = document.createElement('option');
@@ -251,7 +255,12 @@
             modeloSelect.appendChild(option);
           });
         }
+        aplicarFiltros();
       });
+
+      modeloSelect.addEventListener("change", aplicarFiltros);
+      document.querySelectorAll(".filter").forEach(el => el.addEventListener("change", aplicarFiltros));
+      document.getElementById("searchInput").addEventListener("input", aplicarFiltros);
 
       document.getElementById("adicionarProduto").addEventListener("click", () => {
         const nome = document.getElementById("nomePeca").value.trim();
@@ -269,6 +278,9 @@
 
         const card = document.createElement("div");
         card.className = "card";
+        card.dataset.marca = marca;
+        card.dataset.modelo = modelo;
+        card.dataset.categoria = categoria;
         card.innerHTML = `
           <img src="${imagem}" alt="Imagem da Peça" style="width: 100%; border-radius: 6px; margin-bottom: 1rem;">
           <h4>${nome}</h4>
@@ -279,9 +291,8 @@
           <a href="${link}" target="_blank">Ver no Mercado Livre</a>
         `;
 
-        document.querySelector(".content").appendChild(card);
+        produtoContainer.appendChild(card);
 
-        // Limpar campos
         document.getElementById("nomePeca").value = "";
         document.getElementById("marca").value = "";
         document.getElementById("modelo").value = "";
@@ -289,7 +300,41 @@
         document.getElementById("descricao").value = "";
         document.getElementById("imagem").value = "";
         document.getElementById("link").value = "";
+
+        aplicarFiltros();
       });
+
+      document.getElementById("limparProdutos").addEventListener("click", () => {
+        if (confirm("Tem certeza que deseja remover todos os produtos?")) {
+          produtoContainer.innerHTML = "";
+        }
+      });
+
+      function aplicarFiltros() {
+        const textoBusca = document.getElementById("searchInput").value.toLowerCase();
+        const filtrosCategoria = Array.from(document.querySelectorAll(".filter:checked")).map(cb => cb.value);
+        const marcaSelecionada = marcaSelect.value;
+        const modeloSelecionado = modeloSelect.value;
+
+        const cards = produtoContainer.querySelectorAll(".card");
+        cards.forEach(card => {
+          const textoCard = card.textContent.toLowerCase();
+          const cardMarca = card.dataset.marca || "";
+          const cardModelo = card.dataset.modelo || "";
+          const cardCategoria = card.dataset.categoria || "";
+
+          const condicaoBusca = textoCard.includes(textoBusca);
+          const condicaoCategoria = filtrosCategoria.length === 0 || filtrosCategoria.includes(cardCategoria);
+          const condicaoMarca = !marcaSelecionada || cardMarca === marcaSelecionada;
+          const condicaoModelo = !modeloSelecionado || cardModelo === modeloSelecionado;
+
+          if (condicaoBusca && condicaoCategoria && condicaoMarca && condicaoModelo) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
     });
   </script>
 </body>
