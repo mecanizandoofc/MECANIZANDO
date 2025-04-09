@@ -32,7 +32,7 @@
     }
 
     .search-bar {
-      display: flex;
+      display: none;
       align-items: center;
       background-color: #2c2c2c;
       border-radius: 8px;
@@ -69,6 +69,7 @@
     }
 
     .sidebar {
+      display: none;
       background-color: #1e1e1e;
       border-radius: 10px;
       padding: 1rem;
@@ -95,6 +96,15 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 1rem;
+    }
+
+    .mensagem-vazia {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      color: #ccc;
     }
 
     .card {
@@ -173,14 +183,14 @@
     <div class="logo">
       <img src="logo.png" alt="Logo Mecanizando">
     </div>
-    <div class="search-bar">
+    <div class="search-bar" id="searchContainer">
       <input type="text" id="searchInput" placeholder="Buscar por peça, marca ou modelo">
       <i class="fas fa-search"></i>
     </div>
   </header>
 
   <div class="main">
-    <div class="sidebar">
+    <div class="sidebar" id="filtrosContainer">
       <h3><i class="fas fa-filter"></i> Filtros</h3>
       <label for="marcaSelect"><i class="fas fa-car"></i> Marca</label>
       <select id="marcaSelect" onchange="atualizarModelos()">
@@ -188,8 +198,17 @@
       </select>
 
       <label for="modeloSelect"><i class="fas fa-car-side"></i> Modelo</label>
-      <select id="modeloSelect">
+      <select id="modeloSelect" onchange="filtrarProdutos()">
         <option value="">Todos os modelos</option>
+      </select>
+
+      <label for="categoriaSelect"><i class="fas fa-cogs"></i> Categoria</label>
+      <select id="categoriaSelect" onchange="filtrarProdutos()">
+        <option value="">Todas as categorias</option>
+        <option value="freio">Freio</option>
+        <option value="suspensão">Suspensão</option>
+        <option value="motor">Motor</option>
+        <option value="transmissão">Transmissão</option>
       </select>
     </div>
     <div class="content" id="produtosContainer">
@@ -213,100 +232,110 @@
   </footer>
 
   <script>
-    const produtos = [];
-    const modelosPorMarca = {};
+    window.onload = function () {
+      const produtos = [];
+      const modelosPorMarca = {};
 
-    function adicionarProduto() {
-      const nome = document.getElementById('produtoNome').value;
-      const marca = document.getElementById('produtoMarca').value;
-      const modelo = document.getElementById('produtoModelo').value;
-      const categoria = document.getElementById('produtoCategoria').value;
-      const descricao = document.getElementById('produtoDescricao').value;
-      const link = document.getElementById('produtoLink').value;
+      function adicionarProduto() {
+        const nome = document.getElementById('produtoNome').value;
+        const marca = document.getElementById('produtoMarca').value;
+        const modelo = document.getElementById('produtoModelo').value;
+        const categoria = document.getElementById('produtoCategoria').value;
+        const descricao = document.getElementById('produtoDescricao').value;
+        const link = document.getElementById('produtoLink').value;
 
-      if (!nome || !marca || !modelo || !categoria || !descricao || !link) {
-        alert('Preencha todos os campos para adicionar o produto.');
-        return;
+        if (!nome || !marca || !modelo || !categoria || !descricao || !link) {
+          alert('Preencha todos os campos para adicionar o produto.');
+          return;
+        }
+
+        produtos.push({ nome, marca, modelo, categoria, descricao, link });
+        if (!modelosPorMarca[marca]) modelosPorMarca[marca] = new Set();
+        modelosPorMarca[marca].add(modelo);
+        atualizarFiltros();
+        renderizarProdutos(produtos);
+        limparCampos();
       }
 
-      produtos.push({ nome, marca, modelo, categoria, descricao, link });
-      if (!modelosPorMarca[marca]) modelosPorMarca[marca] = new Set();
-      modelosPorMarca[marca].add(modelo);
-      atualizarFiltros();
-      renderizarProdutos(produtos);
-      limparCampos();
-    }
-
-    function atualizarFiltros() {
-      const marcaSelect = document.getElementById('marcaSelect');
-      const modeloSelect = document.getElementById('modeloSelect');
-
-      marcaSelect.innerHTML = '<option value="">Todas as marcas</option>';
-      Object.keys(modelosPorMarca).forEach(marca => {
-        marcaSelect.innerHTML += `<option value="${marca}">${marca}</option>`;
-      });
-    }
-
-    function atualizarModelos() {
-      const marca = document.getElementById('marcaSelect').value;
-      const modeloSelect = document.getElementById('modeloSelect');
-
-      modeloSelect.innerHTML = '<option value="">Todos os modelos</option>';
-      if (marca && modelosPorMarca[marca]) {
-        modelosPorMarca[marca].forEach(modelo => {
-          modeloSelect.innerHTML += `<option value="${modelo}">${modelo}</option>`;
+      function atualizarFiltros() {
+        const marcaSelect = document.getElementById('marcaSelect');
+        marcaSelect.innerHTML = '<option value="">Todas as marcas</option>';
+        Object.keys(modelosPorMarca).forEach(marca => {
+          marcaSelect.innerHTML += `<option value="${marca}">${marca}</option>`;
         });
       }
-      filtrarProdutos();
-    }
 
-    document.getElementById('modeloSelect').addEventListener('change', filtrarProdutos);
+      function atualizarModelos() {
+        const marca = document.getElementById('marcaSelect').value;
+        const modeloSelect = document.getElementById('modeloSelect');
+        modeloSelect.innerHTML = '<option value="">Todos os modelos</option>';
+        if (marca && modelosPorMarca[marca]) {
+          modelosPorMarca[marca].forEach(modelo => {
+            modeloSelect.innerHTML += `<option value="${modelo}">${modelo}</option>`;
+          });
+        }
+        filtrarProdutos();
+      }
 
-    function filtrarProdutos() {
-      const marca = document.getElementById('marcaSelect').value;
-      const modelo = document.getElementById('modeloSelect').value;
-      const filtrado = produtos.filter(p =>
-        (!marca || p.marca === marca) &&
-        (!modelo || p.modelo === modelo)
-      );
-      renderizarProdutos(filtrado);
-    }
+      function filtrarProdutos() {
+        const marca = document.getElementById('marcaSelect').value;
+        const modelo = document.getElementById('modeloSelect').value;
+        const categoria = document.getElementById('categoriaSelect').value;
+        const termo = document.getElementById('searchInput').value.toLowerCase();
 
-    function limparCampos() {
-      document.getElementById('produtoNome').value = '';
-      document.getElementById('produtoMarca').value = '';
-      document.getElementById('produtoModelo').value = '';
-      document.getElementById('produtoCategoria').value = '';
-      document.getElementById('produtoDescricao').value = '';
-      document.getElementById('produtoLink').value = '';
-    }
+        const filtrado = produtos.filter(p =>
+          (!marca || p.marca === marca) &&
+          (!modelo || p.modelo === modelo) &&
+          (!categoria || p.categoria.toLowerCase() === categoria.toLowerCase()) &&
+          (!termo || p.nome.toLowerCase().includes(termo) || p.marca.toLowerCase().includes(termo) || p.modelo.toLowerCase().includes(termo))
+        );
+        renderizarProdutos(filtrado);
+      }
 
-    function renderizarProdutos(lista) {
-      const container = document.getElementById('produtosContainer');
-      container.innerHTML = '';
-      lista.forEach(produto => {
-        container.innerHTML += `
-          <div class="card">
-            <h4>${produto.nome}</h4>
-            <p><strong>Marca:</strong> ${produto.marca}</p>
-            <p><strong>Modelo:</strong> ${produto.modelo}</p>
-            <p><strong>Categoria:</strong> ${produto.categoria}</p>
-            <p>${produto.descricao}</p>
-            <a href="${produto.link}" target="_blank">Ver no Mercado Livre</a>
-          </div>
-        `;
-      });
-    }
+      function limparCampos() {
+        document.getElementById('produtoNome').value = '';
+        document.getElementById('produtoMarca').value = '';
+        document.getElementById('produtoModelo').value = '';
+        document.getElementById('produtoCategoria').value = '';
+        document.getElementById('produtoDescricao').value = '';
+        document.getElementById('produtoLink').value = '';
+      }
 
-    document.querySelector('.fa-search').addEventListener('click', () => {
-      const termo = document.getElementById('searchInput').value.toLowerCase();
-      const filtrado = produtos.filter(p =>
-        p.nome.toLowerCase().includes(termo) ||
-        p.marca.toLowerCase().includes(termo) ||
-        p.modelo.toLowerCase().includes(termo)
-      );
-      renderizarProdutos(filtrado);
-    });
+      function renderizarProdutos(lista) {
+        const container = document.getElementById('produtosContainer');
+        container.innerHTML = '';
+
+        const filtrosContainer = document.getElementById('filtrosContainer');
+        const searchContainer = document.getElementById('searchContainer');
+
+        if (lista.length === 0) {
+          container.innerHTML = '<div class="mensagem-vazia">Nenhum produto cadastrado ainda.</div>';
+          filtrosContainer.style.display = 'none';
+          searchContainer.style.display = 'none';
+        } else {
+          filtrosContainer.style.display = 'block';
+          searchContainer.style.display = 'flex';
+
+          lista.forEach(produto => {
+            container.innerHTML += `
+              <div class="card">
+                <h4>${produto.nome}</h4>
+                <p><strong>Marca:</strong> ${produto.marca}</p>
+                <p><strong>Modelo:</strong> ${produto.modelo}</p>
+                <p><strong>Categoria:</strong> ${produto.categoria}</p>
+                <p>${produto.descricao}</p>
+                <a href="${produto.link}" target="_blank">Ver no Mercado Livre</a>
+              </div>
+            `;
+          });
+        }
+      }
+
+      document.querySelector('.fa-search').addEventListener('click', filtrarProdutos);
+
+      window.adicionarProduto = adicionarProduto;
+      window.atualizarModelos = atualizarModelos;
+    };
   </script>
 </body>
 </html>
