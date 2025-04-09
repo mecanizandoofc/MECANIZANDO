@@ -24,10 +24,11 @@
       align-items: center;
       padding: 1rem 2rem;
       background-color: #1e1e1e;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
 
     .logo img {
-      height: 40px;
+      height: 50px;
     }
 
     .search-bar {
@@ -36,6 +37,7 @@
       background-color: #2c2c2c;
       border-radius: 8px;
       padding: 0.5rem;
+      box-shadow: inset 0 0 5px rgba(0,255,204,0.5);
     }
 
     .search-bar input {
@@ -44,12 +46,13 @@
       outline: none;
       color: white;
       padding: 0.5rem;
-      width: 250px;
+      width: 300px;
     }
 
     .search-bar i {
       color: #00ffcc;
       cursor: pointer;
+      margin-left: 0.5rem;
     }
 
     .main {
@@ -69,6 +72,7 @@
       background-color: #1e1e1e;
       border-radius: 10px;
       padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
     .sidebar h3 {
@@ -76,9 +80,10 @@
       color: #00ffcc;
     }
 
-    .sidebar label {
+    .sidebar label, .sidebar select {
       display: block;
       margin: 0.5rem 0;
+      width: 100%;
     }
 
     .sidebar i {
@@ -136,15 +141,11 @@
     }
 
     .admin-panel {
-      display: none;
-      padding: 1rem;
+      padding: 2rem;
       background: #1e1e1e;
       border-radius: 10px;
       margin: 2rem;
-    }
-
-    .admin-panel.visible {
-      display: block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     .admin-panel h3 {
@@ -152,13 +153,25 @@
       margin-bottom: 1rem;
     }
 
-    .admin-panel input {
+    .admin-panel input, .admin-panel textarea {
       display: block;
       width: 100%;
       margin-bottom: 1rem;
-      padding: 0.5rem;
+      padding: 0.75rem;
       border: none;
       border-radius: 6px;
+      background-color: #2c2c2c;
+      color: white;
+    }
+
+    .admin-panel button {
+      background-color: #00ffcc;
+      color: #121212;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     footer {
@@ -189,14 +202,39 @@
       <label><input type="checkbox" class="filter" value="Transmissão"> <i class="fas fa-road"></i>Transmissão</label>
       <label><input type="checkbox" class="filter" value="Elétrica"> <i class="fas fa-bolt"></i>Elétrica</label>
       <label><input type="checkbox" class="filter" value="Arrefecimento"> <i class="fas fa-fan"></i>Arrefecimento</label>
+
+      <strong style="margin-top: 1rem; display: block;">Marca</strong>
+      <select id="marcaSelect">
+        <option value="">Todas as marcas</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Nissan">Nissan</option>
+        <option value="Mitsubishi">Mitsubishi</option>
+      </select>
+
+      <strong style="margin-top: 1rem; display: block;">Modelo</strong>
+      <select id="modeloSelect">
+        <option value="">Todos os modelos</option>
+      </select>
     </div>
+
     <div class="content">
       <!-- Cards de produtos -->
     </div>
   </div>
 
-  <div class="admin-panel" id="adminPanel">
-    <!-- painel de administração mantido -->
+  <div class="admin-panel visible" id="adminPanel">
+    <h3>Adicionar Produto</h3>
+    <input type="text" placeholder="Nome da Peça">
+    <input type="text" placeholder="Marca">
+    <input type="text" placeholder="Modelo do Veículo">
+    <input type="text" placeholder="Categoria">
+    <textarea placeholder="Descrição do Produto"></textarea>
+    <input type="url" placeholder="Link para o Mercado Livre">
+    <button>Adicionar Produto</button>
   </div>
 
   <footer>
@@ -204,7 +242,45 @@
   </footer>
 
   <script>
-    // scripts mantidos
+    document.addEventListener("DOMContentLoaded", () => {
+      const modelosPorMarca = {
+        'Volkswagen': ['Gol', 'Voyage', 'Saveiro', 'Fox', 'Polo', 'Jetta'],
+        'Chevrolet': ['Onix', 'Prisma', 'Cruze', 'S10', 'Tracker', 'Cobalt', 'Montana', 'Corsa'],
+        'Fiat': ['Uno', 'Palio', 'Strada', 'Toro', 'Argo', 'Mobi'],
+        'Jeep': ['Renegade', 'Compass', 'Commander', 'Wrangler'],
+        'Toyota': ['Corolla', 'Hilux', 'Yaris', 'Etios', 'SW4'],
+        'Nissan': ['Versa', 'Kicks', 'Frontier', 'Sentra', 'March'],
+        'Mitsubishi': ['L200', 'Pajero', 'Outlander', 'ASX']
+      };
+
+      function atualizarModelos() {
+        const marcaSelecionada = document.getElementById('marcaSelect').value;
+        const modeloSelect = document.getElementById('modeloSelect');
+        modeloSelect.innerHTML = '<option value="">Todos os modelos</option>';
+
+        if (modelosPorMarca[marcaSelecionada]) {
+          modelosPorMarca[marcaSelecionada].forEach(modelo => {
+            const option = document.createElement('option');
+            option.value = modelo;
+            option.textContent = modelo;
+            modeloSelect.appendChild(option);
+          });
+        }
+      }
+
+      function aplicarFiltros() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const marca = document.getElementById('marcaSelect').value;
+        const modelo = document.getElementById('modeloSelect').value;
+
+        console.log("Busca:", search);
+        console.log("Marca:", marca);
+        console.log("Modelo:", modelo);
+      }
+
+      document.getElementById("marcaSelect").addEventListener("change", atualizarModelos);
+      window.aplicarFiltros = aplicarFiltros;
+    });
   </script>
 </body>
 </html>
