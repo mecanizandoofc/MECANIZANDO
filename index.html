@@ -1,130 +1,110 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mecanizando</title>
-  <link rel="stylesheet" href="estilo.css">
+  <title>MECANIZANDO</title>
   <style>
     body {
-      background-color: #0d0d0d;
-      color: white;
       font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
-
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
-      background-color: #1a1a1a;
+      align-items: center;
     }
-
-    .logo {
-      height: 100px;
-    }
-
-    .filtros {
+    .search-container {
       display: flex;
+      align-items: center;
+    }
+    .search-container input {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px 0 0 4px;
+      border: none;
+      outline: none;
+    }
+    .search-container button {
+      padding: 8px;
+      background-color: #333;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      color: white;
+      cursor: pointer;
+    }
+    .admin-link {
+      color: #0f0;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      margin-top: 30px;
+    }
+    section h2 {
+      margin-bottom: 10px;
+    }
+    .category-list, .brand-list, .model-list {
+      display: flex;
+      gap: 15px;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 20px auto;
-      max-width: 800px;
     }
-
-    .filtros select,
-    .filtros input[type="text"] {
-      padding: 10px;
+    .category, .brand, .model {
+      background-color: #222;
+      padding: 10px 20px;
       border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-
-    .resultados {
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .peca {
-      background-color: #1a1a1a;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    }
-
-    .admin-section {
-      max-width: 800px;
-      margin: 40px auto;
-      background-color: #1a1a1a;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    }
-
-    .admin-section h2 {
-      margin-top: 0;
-    }
-
-    .admin-section input,
-    .admin-section button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
+      color: #0ff;
+      cursor: pointer;
     }
   </style>
 </head>
-
 <body>
   <header>
-    <img src="logo-branca.png" alt="Logo Mecanizando" class="logo">
+    <h1>MECANIZANDO</h1>
+    <div class="search-container">
+      <input type="text" placeholder="Buscar peça...">
+      <button>🔍</button>
+    </div>
   </header>
 
-  <section class="filtros">
-    <input type="text" id="busca" placeholder="Buscar por peça, marca ou veículo">
-    <select id="marca">
-      <option value="">Marca</option>
-      <option value="chevrolet">Chevrolet</option>
-      <option value="ford">Ford</option>
-      <option value="fiat">Fiat</option>
-      <option value="vw">Volkswagen</option>
-      <option value="toyota">Toyota</option>
-    </select>
+  <p>Catálogo de peças em construção.</p>
+  <p><a class="admin-link" href="/admin/">Acesso restrito (admin)</a></p>
 
-    <select id="modelo">
-      <option value="">Modelo</option>
-    </select>
-
-    <select id="categoria">
-      <option value="">Categoria</option>
-      <option value="motor">Motor</option>
-      <option value="suspensao">Suspensão</option>
-      <option value="freios">Freios</option>
-      <option value="eletrica">Elétrica</option>
-    </select>
+  <section class="categories">
+    <h2>Categorias</h2>
+    <div class="category-list">
+      <div class="category">Motor</div>
+      <div class="category">Suspensão</div>
+      <div class="category">Freio</div>
+      <div class="category">Elétrica</div>
+      <div class="category">Interior</div>
+    </div>
   </section>
 
-  <section class="resultados" id="resultados">
-    <!-- Aqui aparecerão as peças filtradas -->
+  <section class="brands">
+    <h2>Marcas</h2>
+    <div class="brand-list">
+      <div class="brand">Chevrolet</div>
+      <div class="brand">Fiat</div>
+      <div class="brand">Ford</div>
+      <div class="brand">Volkswagen</div>
+      <div class="brand">Toyota</div>
+    </div>
   </section>
 
-  <section class="admin-section" id="adminSection">
-    <h2>Área do Administrador</h2>
-    <p>Cole seu link de afiliado abaixo:</p>
-    <input type="text" id="affiliateLink" placeholder="Cole aqui o link do produto">
-    <button onclick="buscarAfiliado()">Buscar Informações</button>
-    <div id="afiliadoResultado"></div>
+  <section class="models">
+    <h2>Modelos</h2>
+    <div class="model-list">
+      <div class="model">Onix</div>
+      <div class="model">Uno</div>
+      <div class="model">Ka</div>
+      <div class="model">Gol</div>
+      <div class="model">Corolla</div>
+    </div>
   </section>
-
-  <script src="script.js"></script>
 </body>
-
 </html>
