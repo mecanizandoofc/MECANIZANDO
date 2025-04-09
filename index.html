@@ -228,13 +228,13 @@
 
   <div class="admin-panel visible" id="adminPanel">
     <h3>Adicionar Produto</h3>
-    <input type="text" placeholder="Nome da Peça">
-    <input type="text" placeholder="Marca">
-    <input type="text" placeholder="Modelo do Veículo">
-    <input type="text" placeholder="Categoria">
-    <textarea placeholder="Descrição do Produto"></textarea>
-    <input type="url" placeholder="Link para o Mercado Livre">
-    <button>Adicionar Produto</button>
+    <input type="text" id="nomePeca" placeholder="Nome da Peça">
+    <input type="text" id="marca" placeholder="Marca">
+    <input type="text" id="modelo" placeholder="Modelo do Veículo">
+    <input type="text" id="categoria" placeholder="Categoria">
+    <textarea id="descricao" placeholder="Descrição do Produto"></textarea>
+    <input type="url" id="link" placeholder="Link para o Mercado Livre">
+    <button id="adicionarProduto">Adicionar Produto</button>
   </div>
 
   <footer>
@@ -280,6 +280,41 @@
 
       document.getElementById("marcaSelect").addEventListener("change", atualizarModelos);
       window.aplicarFiltros = aplicarFiltros;
+
+      document.getElementById("adicionarProduto").addEventListener("click", () => {
+        const nome = document.getElementById("nomePeca").value.trim();
+        const marca = document.getElementById("marca").value.trim();
+        const modelo = document.getElementById("modelo").value.trim();
+        const categoria = document.getElementById("categoria").value.trim();
+        const descricao = document.getElementById("descricao").value.trim();
+        const link = document.getElementById("link").value.trim();
+
+        if (!nome || !marca || !modelo || !categoria || !descricao || !link) {
+          alert("Preencha todos os campos.");
+          return;
+        }
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h4>${nome}</h4>
+          <p><strong>Marca:</strong> ${marca}</p>
+          <p><strong>Modelo:</strong> ${modelo}</p>
+          <p><strong>Categoria:</strong> ${categoria}</p>
+          <p>${descricao}</p>
+          <a href="${link}" target="_blank">Ver no Mercado Livre</a>
+        `;
+
+        document.querySelector(".content").appendChild(card);
+
+        // Limpar campos
+        document.getElementById("nomePeca").value = "";
+        document.getElementById("marca").value = "";
+        document.getElementById("modelo").value = "";
+        document.getElementById("categoria").value = "";
+        document.getElementById("descricao").value = "";
+        document.getElementById("link").value = "";
+      });
     });
   </script>
 </body>
